@@ -1,0 +1,47 @@
+`timescale 1ns/1ns // Set timescale for simulation
+
+module NegativeEdgeDetector_TB;
+
+    // Define constants
+    parameter CLK_PERIOD = 10; // Clock period in simulation (in ns)
+
+    // Declare signals for testbench
+    reg clk;               // Clock signal
+    reg signal_in;         // Input signal
+    wire neg_edge;         // Output indicating falling edge detection
+
+    // Instantiate the module under test
+    NegativeEdgeDetector UUT (
+        .clk(clk),
+        .signal_in(signal_in),
+        .neg_edge(neg_edge)
+    );
+
+    // Clock generation
+    always #((CLK_PERIOD / 2)) clk = ~clk;
+
+    // Test stimulus
+    initial begin
+        clk = 0;            // Initialize clock
+        signal_in = 0;      // Initialize input signal
+        
+        // Testcase 1: No falling edge
+        #20;                // Wait for a while
+        signal_in = 1;      // Keep signal high
+        #20;                // Wait for a while
+        
+        // Testcase 2: Falling edge
+        signal_in = 0;      // Bring signal low (falling edge)
+        #20;                // Wait for a while
+        
+        // Testcase 3: Another falling edge
+        signal_in = 1;      // Bring signal high again
+        #20;                // Wait for a while
+        signal_in = 0;      // Bring signal low (falling edge)
+        #20;                // Wait for a while
+        
+        // End simulation
+        $finish;
+    end
+
+endmodule
