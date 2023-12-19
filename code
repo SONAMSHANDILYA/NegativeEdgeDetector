@@ -1,0 +1,24 @@
+module NegativeEdgeDetector(
+    input wire clk,       // Clock signal
+    input wire signal_in, // Input signal to detect falling edge
+    output reg neg_edge   // Output indicating falling edge detection
+);
+
+reg signal_in_delay;     // Delayed version of signal_in
+
+// Create a delayed version of the input signal
+always @(posedge clk) begin
+    signal_in_delay <= signal_in;
+end
+
+// Detect falling edge using the delayed signal
+always @(posedge clk) begin
+    // When the current signal is high and the delayed signal is low, a falling edge is detected
+    if (signal_in_delay == 1'b1 && signal_in == 1'b0) begin
+        neg_edge <= 1'b1; // Set output to indicate falling edge detected
+    end else begin
+        neg_edge <= 1'b0; // Reset output
+    end
+end
+
+endmodule
